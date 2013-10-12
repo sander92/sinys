@@ -1,4 +1,4 @@
 sinys
 =====
 
-TVT jaoks
+TVT jaoks loodud POS süsteem Java keskkonnas
