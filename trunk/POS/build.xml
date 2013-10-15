@@ -32,10 +32,32 @@
 	<!-- Definitions of runnable ant targets.
          Run them from the command line by executing "ant [targetname]"  -->
 
-	<target name="run" depends="build" description="Run the template application">
-		<java classname="ee.ut.math.tvt.salessystem.SalesSystem" classpathref="test.classpath" fork="yes" />
+	<target name="run" depends="build" description="Run the application">
+		<java classname="ee.ut.math.tvt.sinys.Intro" classpathref="test.classpath" fork="yes" />
+	</target>
+	
+	<target name="dist" depends="clean,build" description="Run the application">
+		<mkdir dir="${build.dir}/jar"/>
+		<property file="version.properties"/>
+
+		<propertyfile
+		    file="version.properties">
+			  <entry key="build.revision.number" type="int" operation="+" value="1"/>
+
+		  <entry key="build.number" value="${build.major.number}.${build.minor.number}.${build.revision.number}"/>
+		</propertyfile>
+		
+		<jar destfile="${build.dir}/jar/sinys.jar"
+		     basedir="${build.dir}/classes"
+		     includes="lib/**,application.properties,version.properties"
+		/>
+
 	</target>
 
+	<target name="jrun" depends="clean,dist" description="JRun the application">		
+			<java jar="${build.dir}/jar/sinys.jar" fork="true" />
+		</target>
+	
 	<target name="build" description="Build the system">
 		<mkdir dir="${build.dir}"/>
 		<mkdir dir="${build.classes.dir}"/>
