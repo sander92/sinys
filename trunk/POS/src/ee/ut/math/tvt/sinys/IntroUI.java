@@ -1,6 +1,5 @@
 package ee.ut.math.tvt.sinys;
 
-import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -13,21 +12,16 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
 
 import javax.imageio.ImageIO;
-import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.border.Border;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
@@ -51,13 +45,12 @@ public class IntroUI extends JFrame {
 	public IntroUI() throws HeadlessException, IOException {
 		super();
 		//org.apache.log4j.BasicConfigurator.configure();
-	    PropertyConfigurator.configure("log4j.properties");
+	    PropertyConfigurator.configure("etc/log4j.properties");
 
 		Properties propApp = new Properties();
     	try {
-			propApp.load(new FileInputStream(new File("application.properties")));
+			propApp.load(new FileInputStream(new File("etc/application.properties")));
 		} catch (IOException e) {
-			System.out.println("asi");
 			log.warn(e.getMessage());
 		}
 		this.teamName = propApp.getProperty("team.name");
@@ -146,7 +139,7 @@ public class IntroUI extends JFrame {
 		//for soft ver nr
 		Properties prop = new Properties();
     	try {
-			prop.load(new FileInputStream(new File("version.properties")));
+			prop.load(new FileInputStream(new File("etc/version.properties")));
 		} catch (IOException e) {
 			log.warn(e.getMessage());
 		}
