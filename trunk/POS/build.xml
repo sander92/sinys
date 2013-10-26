@@ -205,7 +205,9 @@
 
 	<target name="git_fetch">
 		<exec executable="git">
-			<arg value="fetch origin" />
+			<arg value="fetch" />
+			<arg value="origin" />
+
 		</exec>
 
 	</target>
