@@ -182,24 +182,33 @@
 		<input message="Please enter git tag name:" addproperty="git_tag" />
 		<input message="Please enter git comment:" addproperty="git_comm" />
 
+
+		<input message="Please enter git username:" addproperty="git_user" />
+		<input message="Please enter git password:" addproperty="git_pass" />
+
+		<echo message="making tag" />
+
 		<exec executable="git">
 			<arg value="tag" />
 			<arg value="-a" />
 			<arg value="${git_tag}" />
 			<arg value="-m" />
-			<arg value="${git_comm}" />
+			<arg value="'${git_comm}'" />
 		</exec>
+		<echo message="pushing tag" />
 
 		<exec executable="git">
 			<arg value="push" />
+			<arg value="https://${git_user}:${git_pass}@github.com/sander92/sinys.git" />
 			<arg value="--tags" />
-
 		</exec>
+		<echo message="tag push finished" />
+
 	</target>
 
 	<target name="git_pull">
 		<antcall target="git_fetch" />
-		<antcall target="git_merge" />
+		<!--antcall target="git_merge" /-->
 
 	</target>
 
@@ -212,12 +221,12 @@
 
 	</target>
 
-	<target name="git_merge">
+	<!--target name="git_merge">
 
 		<exec executable="git">
 			<arg value="merge" />
 		</exec>
-	</target>
+	</target-->
 
 	<!--
 	//TODO git_tag to be done
