@@ -1,10 +1,14 @@
 package ee.ut.math.tvt.salessystem.ui.tabs;
 
 import ee.ut.math.tvt.salessystem.ui.model.SalesSystemModel;
+
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -12,12 +16,19 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.JTableHeader;
 
+import ee.ut.math.tvt.salessystem.ui.panels.AddItemPanel;
+
+
 
 public class StockTab {
 
   private JButton addItem;
+  
+  private JButton cancelItem;
 
   private SalesSystemModel model;
+  
+  private AddItemPanel addItemPanel;
 
   public StockTab(SalesSystemModel model) {
     this.model = model;
@@ -31,6 +42,11 @@ public class StockTab {
     GridBagLayout gb = new GridBagLayout();
     GridBagConstraints gc = new GridBagConstraints();
     panel.setLayout(gb);
+    
+    panel.add(drawStockMenuPane(), getConstraintsForAddItemMenu());
+
+    addItemPanel = new AddItemPanel(model);
+    panel.add(addItemPanel, getConstraintsForAddItemPanel());
 
     gc.fill = GridBagConstraints.HORIZONTAL;
     gc.anchor = GridBagConstraints.NORTH;
@@ -38,7 +54,6 @@ public class StockTab {
     gc.weightx = 1.0d;
     gc.weighty = 0d;
 
-    panel.add(drawStockMenuPane(), gc);
 
     gc.weighty = 1.0;
     gc.fill = GridBagConstraints.BOTH;
@@ -50,20 +65,18 @@ public class StockTab {
   private Component drawStockMenuPane() {
     JPanel panel = new JPanel();
 
-    GridBagConstraints gc = new GridBagConstraints();
+    GridBagConstraints gc = getConstraintsForButtons();
     GridBagLayout gb = new GridBagLayout();
 
     panel.setLayout(gb);
 
-    gc.anchor = GridBagConstraints.NORTHWEST;
-    gc.weightx = 0;
 
-    addItem = new JButton("Add");
-    gc.gridwidth = GridBagConstraints.RELATIVE;
-    gc.weightx = 1.0;
+    addItem = createAddItemButton();
+    cancelItem = createCancelAddButton();
+
     panel.add(addItem, gc);
+    panel.add(cancelItem, gc);
 
-    panel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
     return panel;
   }
 
@@ -91,5 +104,87 @@ public class StockTab {
     panel.setBorder(BorderFactory.createTitledBorder("Warehouse status"));
     return panel;
   }
+  
+  
+  // Creates the add and cancel buttons 
+  
+  
+  private JButton createAddItemButton() {
+    JButton b = new JButton("Add Item");
+    b.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+    	  newAddItemClicked();
+      }
+    });
+    b.setEnabled(true);
+    
+    return b;
+  }
+  
+  private JButton createCancelAddButton() {
+	    JButton b = new JButton("Cancel");
+	    b.addActionListener(new ActionListener() {
+	      public void actionPerformed(ActionEvent e) {
+	    	  newCancelAddClicked();
+	      }
+	    });
+	    b.setEnabled(false);
+	    
+	    return b;
+	  }
+	  
+  
+  
+  
+  protected void newAddItemClicked() {
+	  addItemPanel.setEnabled(true);
+	  cancelItem.setEnabled(true);
+  }
 
+	  
+	  protected void newCancelAddClicked() {
+		  addItemPanel.reset();
+		  addItemPanel.setEnabled(false);
+		  cancelItem.setEnabled(false);
+	  }
+  
+	  
+	  
+	  // Layout stuff
+	  
+	  
+  private GridBagConstraints getConstraintsForAddItemMenu() {
+	    GridBagConstraints gc = new GridBagConstraints();
+
+	    gc.fill = GridBagConstraints.HORIZONTAL;
+	    gc.anchor = GridBagConstraints.NORTH;
+	    gc.gridwidth = GridBagConstraints.REMAINDER;
+	    gc.weightx = 1.0d;
+	    gc.weighty = 0d;
+
+	    return gc;
+	  }
+
+  private GridBagConstraints getConstraintsForAddItemPanel() {
+	    GridBagConstraints gc = new GridBagConstraints();
+
+	    gc.fill = GridBagConstraints.BOTH;
+	    gc.anchor = GridBagConstraints.NORTH;
+	    gc.gridwidth = GridBagConstraints.REMAINDER;
+	    gc.weightx = 1.0d;
+	    gc.weighty = 0.0d;
+
+	    return gc;
+	  }
+  
+  private GridBagConstraints getConstraintsForButtons() {
+	    GridBagConstraints gc = new GridBagConstraints();
+
+	    gc.weightx = 0;
+	    gc.anchor = GridBagConstraints.CENTER;
+	    gc.gridwidth = GridBagConstraints.RELATIVE;
+
+	    return gc;
+	  }
+  
 }
