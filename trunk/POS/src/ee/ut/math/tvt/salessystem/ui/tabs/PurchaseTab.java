@@ -2,14 +2,21 @@ package ee.ut.math.tvt.salessystem.ui.tabs;
 
 import ee.ut.math.tvt.salessystem.domain.exception.VerificationFailedException;
 import ee.ut.math.tvt.salessystem.domain.controller.SalesDomainController;
+import ee.ut.math.tvt.salessystem.ui.SalesSystemUI;
 import ee.ut.math.tvt.salessystem.ui.model.SalesSystemModel;
 import ee.ut.math.tvt.salessystem.ui.panels.PurchaseItemPanel;
+import ee.ut.math.tvt.sinys.IntroUI;
+import ee.ut.math.tvt.sinys.PaymentWindow;
+
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -166,6 +173,8 @@ public class PurchaseTab {
   /** Event handler for the <code>submit purchase</code> event. */
   protected void submitPurchaseButtonClicked() {
     log.info("Sale complete");
+    PaymentWindow payment = null;
+    payment = new PaymentWindow();
     try {
       log.debug("Contents of the current basket:\n" + model.getCurrentPurchaseTableModel());
       domainController.submitCurrentPurchase(
@@ -175,6 +184,17 @@ public class PurchaseTab {
       model.getCurrentPurchaseTableModel().clear();
     } catch (VerificationFailedException e1) {
       log.error(e1.getMessage());
+      /*
+      IntroUI introUI = null;
+      try {
+		introUI = new IntroUI();
+	} catch (HeadlessException | IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	*/
+      
+      
     }
   }
 
