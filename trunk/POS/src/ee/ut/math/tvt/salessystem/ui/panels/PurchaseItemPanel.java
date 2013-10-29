@@ -172,15 +172,20 @@ public class PurchaseItemPanel extends JPanel {
 
 	// Fill dialog with data from the "database".
 	public void fillDialogFields() {
-		StockItem stockItem = getStockItemByName();
-		if (stockItem != null) {
-			String barCodeString = String.valueOf(stockItem.getId());
-			barCodeField.setText(barCodeString);
-			String priceString = String.valueOf(stockItem.getPrice());
-			priceField.setText(priceString);
-		} else {
-			reset();
+		try {
+			StockItem stockItem = getStockItemByName();
+			if (stockItem != null) {
+				String barCodeString = String.valueOf(stockItem.getId());
+				barCodeField.setText(barCodeString);
+				String priceString = String.valueOf(stockItem.getPrice());
+				priceField.setText(priceString);
+			} else {
+				reset();
+			}
+		} catch (Exception e) {
+			log.error("No such item in list");
 		}
+
 	}
 
 	// Search the warehouse for a StockItem with the bar code entered
@@ -222,16 +227,16 @@ public class PurchaseItemPanel extends JPanel {
 			}
 			model.getCurrentPurchaseTableModel().addItem(
 					new SoldItem(stockItem, quantity));
-		}
-		else
-		{
+		} else {
 			if (stockItem == null) {
-				JOptionPane.showMessageDialog(frame, "There is not such item in the warehouse",
-						"Error", JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(frame,
+						"There is not such item in the warehouse", "Error",
+						JOptionPane.WARNING_MESSAGE);
 			}
 			if (stockItem.getQuantity() == 0) {
-				JOptionPane.showMessageDialog(frame, "No more products in the warehouse",
-						"Error", JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(frame,
+						"No more products in the warehouse", "Error",
+						JOptionPane.WARNING_MESSAGE);
 			}
 		}
 	}

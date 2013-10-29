@@ -19,6 +19,13 @@ public interface SalesDomainController {
      *         ee.ut.math.tvt.salessystem.domain.data.StockItem}s.
      */
     public List<StockItem> loadWarehouseState();
+    
+    /**
+     * Saves the current state of the warehouse.
+     * @param dataset - the dataset to save to file
+     * @return true, if state was successfully changed; false otherwise.
+     */
+    public boolean saveWarehouseState(List<StockItem> dataset);
 
     // business processes
     /**

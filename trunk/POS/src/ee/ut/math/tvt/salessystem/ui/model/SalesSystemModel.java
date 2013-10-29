@@ -1,8 +1,11 @@
 package ee.ut.math.tvt.salessystem.ui.model;
 
+import java.util.List;
+
 import org.apache.log4j.Logger;
 
 import ee.ut.math.tvt.salessystem.domain.controller.SalesDomainController;
+import ee.ut.math.tvt.salessystem.domain.data.StockItem;
 
 /**
  * Main model. Holds all the other models.
@@ -35,6 +38,10 @@ public class SalesSystemModel {
 
     public StockTableModel getWarehouseTableModel() {
         return warehouseTableModel;
+    }
+    
+    public void saveWarehouseState(List<StockItem> dataset) {
+    	domainController.saveWarehouseState(dataset);
     }
 
     public PurchaseInfoTableModel getCurrentPurchaseTableModel() {

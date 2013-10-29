@@ -20,6 +20,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.sql.Savepoint;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -121,6 +122,7 @@ public class AddItemPanel extends JPanel {
 		addItemButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				addItemEventHandler();
+				model.saveWarehouseState(model.getWarehouseTableModel().getTableRows());
 			}
 		});
 
