@@ -1,5 +1,6 @@
 package ee.ut.math.tvt.salessystem.ui.panels;
 
+import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -20,6 +21,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -49,6 +51,7 @@ public class PurchaseItemPanel extends JPanel {
 
 	// Warehouse model
 	private SalesSystemModel model;
+	private Component frame;
 
 	/**
 	 * Constructs new purchase item panel.
@@ -210,7 +213,7 @@ public class PurchaseItemPanel extends JPanel {
 	public void addItemEventHandler() {
 		// add chosen item to the shopping cart.
 		StockItem stockItem = getStockItemByName();
-		if (stockItem != null) {
+		if (stockItem != null && stockItem.getQuantity() != 0) {
 			int quantity;
 			try {
 				quantity = Integer.parseInt(quantityField.getText());
@@ -219,6 +222,17 @@ public class PurchaseItemPanel extends JPanel {
 			}
 			model.getCurrentPurchaseTableModel().addItem(
 					new SoldItem(stockItem, quantity));
+		}
+		else
+		{
+			if (stockItem == null) {
+				JOptionPane.showMessageDialog(frame, "There is not such item in the warehouse",
+						"Error", JOptionPane.WARNING_MESSAGE);
+			}
+			if (stockItem.getQuantity() == 0) {
+				JOptionPane.showMessageDialog(frame, "No more products in the warehouse",
+						"Error", JOptionPane.WARNING_MESSAGE);
+			}
 		}
 	}
 
