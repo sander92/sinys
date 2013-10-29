@@ -7,22 +7,21 @@ import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JTextField;
 
+import ee.ut.math.tvt.salessystem.domain.data.SoldItem;
 import ee.ut.math.tvt.salessystem.ui.model.SalesSystemModel;
 
-public class PaymentWindow<T> extends JFrame {
+public class PaymentWindow extends JFrame {
 	
 	private String itemName;
 	private JTextField item;
 	private SalesSystemModel model;
-	private List<T> rows;
-	
 	
 	public PaymentWindow() {
 		super();
 		int width = 400;
 		int height = 300;
 		
-		rows = (List<T>) model.getCurrentPurchaseTableModel().getTableRows();
+		model.getCurrentPurchaseTableModel();
 		
 		setTitle("Payment information");
 		setSize(width, height);
