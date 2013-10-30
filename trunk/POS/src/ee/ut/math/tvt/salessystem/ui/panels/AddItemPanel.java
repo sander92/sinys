@@ -51,7 +51,7 @@ public class AddItemPanel extends JPanel {
 	private static final Logger log = Logger.getLogger(AddItemPanel.class);
 
 	// Text field on the dialogPane
-	private JTextField itemId;
+	private JTextField itemDescription;
 	private JTextField itemName;
 	private JTextField itemPrice;
 	private JTextField itemQuantity;
@@ -86,7 +86,7 @@ public class AddItemPanel extends JPanel {
 		panel.setBorder(BorderFactory.createTitledBorder("Add Item"));
 
 		// Initialize the textfields
-		itemId = new JTextField();
+		itemDescription = new JTextField();
 		itemName = new JTextField();
 		itemPrice = new JTextField();
 		itemQuantity = new JTextField();
@@ -94,27 +94,28 @@ public class AddItemPanel extends JPanel {
 		// Fill the dialog fields if the bar code text field loses focus
 
 
-		itemId.setEditable(false);
+		itemDescription.setEditable(false);
 		itemName.setEditable(false);
 		itemPrice.setEditable(false);
 		itemQuantity.setEditable(false);
 
 		// == Add components to the panel
 
-		// - bar code
-		panel.add(new JLabel("Item ID:"));
-		panel.add(itemId);
-
-		// - amount
+		// - item name
 		panel.add(new JLabel("Item name:"));
 		panel.add(itemName);
+		
+		
+		// - item id
+		panel.add(new JLabel("Item description:"));
+		panel.add(itemDescription);
 
-		// - name
+		// - item price
 		panel.add(new JLabel("Item price:"));
 		panel.add(itemPrice);
 
-		// - price
-		panel.add(new JLabel("Item Quantity:"));
+		// - item quantity
+		panel.add(new JLabel("Item quantity:"));
 		panel.add(itemQuantity);
 
 		// Create and add the button
@@ -122,7 +123,6 @@ public class AddItemPanel extends JPanel {
 		addItemButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				addItemEventHandler();
-				model.saveWarehouseState(model.getWarehouseTableModel().getTableRows());
 			}
 		});
 
@@ -135,6 +135,16 @@ public class AddItemPanel extends JPanel {
 	 * Add new item to the cart.
 	 */
 	public void addItemEventHandler() {
+		//takes the information from inserted fields, creates a StockItem and adds it to the StockItems list, logs and resets fields
+		StockItem s1 = new StockItem((long)model.getWarehouseTableModel().getTableRows().size()+1, itemName.getText(),itemDescription.getText(), Integer.parseInt(itemPrice.getText()), Integer.parseInt(itemQuantity.getText()));
+		List<StockItem> dataset1 = model.getWarehouseTableModel().getTableRows();
+		dataset1.add(s1);
+		model.saveWarehouseState(dataset1);
+		model.getWarehouseTableModel().fireTableDataChanged();
+		log.info("New item added to warehouse");
+		reset();
+		setEnabled(false);
+		
 		
 	}
 
@@ -144,7 +154,7 @@ public class AddItemPanel extends JPanel {
 	@Override
 	public void setEnabled(boolean enabled) {
 		this.addItemButton.setEnabled(enabled);
-		this.itemId.setEditable(enabled);
+		this.itemDescription.setEditable(enabled);
 		this.itemName.setEditable(enabled);
 		this.itemPrice.setEditable(enabled);
 		this.itemQuantity.setEditable(enabled);
@@ -154,7 +164,7 @@ public class AddItemPanel extends JPanel {
 	 * Reset dialog fields.
 	 */
 	public void reset() {
-		itemId.setText("");
+		itemDescription.setText("");
 		itemName.setText("");
 		itemPrice.setText("");
 		itemQuantity.setText("");
