@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -18,29 +19,31 @@ import javax.swing.event.DocumentListener;
 
 import org.apache.log4j.Logger;
 
+import ee.ut.math.tvt.salessystem.domain.controller.SalesDomainController;
 import ee.ut.math.tvt.salessystem.domain.data.SoldItem;
+import ee.ut.math.tvt.salessystem.domain.exception.VerificationFailedException;
 import ee.ut.math.tvt.salessystem.ui.model.SalesSystemModel;
 import ee.ut.math.tvt.salessystem.ui.tabs.PurchaseTab;
 
-public class PaymentWindow extends JFrame  {
+public class PaymentWindow extends JFrame {
 	
 	private static final Logger log = Logger.getLogger(PurchaseTab.class);
 	private JTextField paymentAmount;
+	private SalesDomainController domainController;
 	private SalesSystemModel model;
 	private List<SoldItem> rows;
 	private double sum;
-	private double change;
-	private Component comp = getContentPane();
+	private double change = 0.0;
 	private JPanel textPanel;
 	private JLabel changeValue;
-	
-	
+	private JButton acceptButton;
+	private JButton cancelButton;
 	
 	
 	public PaymentWindow(SalesSystemModel model) {
 		this.model = model;
 		int width = 200;
-		int height = 120;
+		int height = 150;
 		
 		rows = model.getCurrentPurchaseTableModel().getTableRows();
 		
@@ -49,14 +52,20 @@ public class PaymentWindow extends JFrame  {
 		}
 		
 		textPanel = new JPanel();
-		textPanel.setLayout(new FlowLayout(FlowLayout.LEADING));
+		textPanel.setLayout(new GridLayout(4,3));
 		add(textPanel);
 		
-		JLabel sumLabel = new JLabel("Sum of the order:");
+		JLabel sumLabel = new JLabel("Order sum:  ");
 		textPanel.add(sumLabel);
 		
 		JLabel sumValue = new JLabel(String.valueOf(sum));
 		textPanel.add(sumValue);
+		
+		JLabel changeLabel = new JLabel("Change:");
+		textPanel.add(changeLabel);
+		
+		changeValue = new JLabel(String.valueOf(change), 10);
+		textPanel.add(changeValue);
 		
 		paymentAmount = new JTextField(15);
 		paymentAmount.getDocument().addDocumentListener(new DocumentListener() {
@@ -69,14 +78,12 @@ public class PaymentWindow extends JFrame  {
 			
 			@Override
 			public void insertUpdate(DocumentEvent e) {
-				// TODO Auto-generated method stub
 				updateChangeValue();
 				
 			}
 			
 			@Override
 			public void changedUpdate(DocumentEvent e) {
-				// TODO Auto-generated method stub
 				updateChangeValue();
 				
 			}
@@ -84,10 +91,29 @@ public class PaymentWindow extends JFrame  {
 		;
 		textPanel.add(paymentAmount);
 		
-		JLabel changeLabel = new JLabel("Change:");
-		textPanel.add(changeLabel);
+		JLabel emptyLabel = new JLabel("");
+		textPanel.add(emptyLabel);
 		
-		changeValue = new JLabel(String.valueOf(change));
+		acceptButton = new JButton("Accept");
+		acceptButton.addActionListener(new ActionListener() {
+			
+			private SalesSystemModel model;
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				this.model = model;
+				try {
+					domainController.submitCurrentPurchase(model.getCurrentPurchaseTableModel().getTableRows());
+				} catch (VerificationFailedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+		textPanel.add(acceptButton);
+		
+		cancelButton = new JButton("Cancel");
+		textPanel.add(cancelButton);
 		
 		setTitle("Payment information");
 		setSize(width, height);
@@ -104,6 +130,5 @@ public class PaymentWindow extends JFrame  {
 			e1.getMessage();
 		}
 		changeValue.setText(String.valueOf(change));
-		textPanel.add(changeValue);
 	}
 }
