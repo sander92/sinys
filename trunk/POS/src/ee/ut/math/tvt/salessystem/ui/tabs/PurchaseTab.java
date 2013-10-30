@@ -174,9 +174,9 @@ public class PurchaseTab {
   protected void submitPurchaseButtonClicked() {
     log.info("Sale complete");
     PaymentWindow payment = null;
-    payment = new PaymentWindow();
+    payment = new PaymentWindow(model);
     try {
-      log.debug("Contents of the current basket:\n" + model.getCurrentPurchaseTableModel());
+    	log.info("Contents of the current basket:\n" + model.getCurrentPurchaseTableModel());
       domainController.submitCurrentPurchase(
           model.getCurrentPurchaseTableModel().getTableRows()
       );
@@ -184,17 +184,6 @@ public class PurchaseTab {
       model.getCurrentPurchaseTableModel().clear();
     } catch (VerificationFailedException e1) {
       log.error(e1.getMessage());
-      /*
-      IntroUI introUI = null;
-      try {
-		introUI = new IntroUI();
-	} catch (HeadlessException | IOException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
-	*/
-      
-      
     }
   }
 
