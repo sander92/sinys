@@ -80,8 +80,19 @@ public class StockTableModel extends SalesSystemTableModel<StockItem> {
 		for (StockItem item : rows) {
 			l.add(item.getName());
 		}
-		
+
 		return l.toArray(new String[l.size()]);
+	}
+
+	public void decrementItemQuantityById(long id, int quantityToDecBy) {
+		for (StockItem item : rows) {
+			if (item.getId() == id) {
+				item.setQuantity(item.getQuantity() - quantityToDecBy);
+
+			}
+
+		}
+		
 	}
 
 }

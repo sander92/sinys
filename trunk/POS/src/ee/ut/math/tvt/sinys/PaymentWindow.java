@@ -143,8 +143,10 @@ public class PaymentWindow extends JFrame {
 
 		for (int i = 0; i < goods.size(); i++) {
 			price += goods.get(i).getPrice();
+			model.getWarehouseTableModel().decrementItemQuantityById(goods.get(i).getId(), goods.get(i).getQuantity());
 		}
-
+		model.getWarehouseTableModel().fireTableDataChanged();
+		model.saveWarehouseState(model.getWarehouseTableModel().getTableRows());
 		Order o = new Order(model.getHistoryTableModel().getRowCount() + 1,
 				price, goods);
 		model.getHistoryTableModel().addItem(o);
