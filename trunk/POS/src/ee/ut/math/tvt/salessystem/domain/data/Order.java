@@ -7,6 +7,12 @@ import java.util.List;
 import ee.ut.math.tvt.salessystem.domain.data.SoldItem;
 
 public class Order implements Cloneable, DisplayableItem{
+	@Override
+	public String toString() {
+		return "Order [id=" + id + ", date=" + date + ", sum=" + sum
+				+ ", solditems=" + solditems + "]";
+	}
+
 	long id;
 	Date date;
 	float sum;

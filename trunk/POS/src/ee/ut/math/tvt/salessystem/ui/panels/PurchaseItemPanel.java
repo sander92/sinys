@@ -218,7 +218,8 @@ public class PurchaseItemPanel extends JPanel {
 	public void addItemEventHandler() {
 		// add chosen item to the shopping cart.
 		StockItem stockItem = getStockItemByName();
-		if (stockItem != null && stockItem.getQuantity() != 0) {
+		int quantityWant=Integer.parseInt(quantityField.getText());
+		if (stockItem != null && (stockItem.getQuantity()-quantityWant >= 0)) {
 			int quantity;
 			try {
 				quantity = Integer.parseInt(quantityField.getText());
@@ -233,9 +234,9 @@ public class PurchaseItemPanel extends JPanel {
 						"There is not such item in the warehouse", "Error",
 						JOptionPane.WARNING_MESSAGE);
 			}
-			if (stockItem.getQuantity() == 0) {
+			if (stockItem.getQuantity()-quantityWant < 0) {
 				JOptionPane.showMessageDialog(frame,
-						"No more products in the warehouse", "Error",
+						"Not enough products in the warehouse", "Error",
 						JOptionPane.WARNING_MESSAGE);
 			}
 		}

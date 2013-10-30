@@ -1,5 +1,6 @@
 package ee.ut.math.tvt.salessystem.ui.tabs;
 
+import ee.ut.math.tvt.salessystem.domain.data.Order;
 import ee.ut.math.tvt.salessystem.domain.data.SoldItem;
 import ee.ut.math.tvt.salessystem.domain.exception.VerificationFailedException;
 import ee.ut.math.tvt.salessystem.domain.controller.SalesDomainController;
@@ -19,6 +20,7 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -166,12 +168,11 @@ public class PurchaseTab {
 		log.info("Sale complete");
 		PaymentWindow payment = null;
 		payment = new PaymentWindow(model);
-		payment.addPropertyChangeListener(new PropertyChangeListener() {
-
+		payment.allDone.addPropertyChangeListener(new PropertyChangeListener() {
+			
 			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
-				System.out.println(evt);
-				if(2==3){
+				if(evt.getNewValue()=="done"){
 					try {
 						log.info("Contents of the current basket:\n"
 								+ model.getCurrentPurchaseTableModel());
@@ -183,11 +184,13 @@ public class PurchaseTab {
 						log.error(e1.getMessage());
 					}
 				}
+				
 			}
 		});
 
 	}
 
+	
 	/*
 	 * === Helper methods that bring the whole purchase-tab to a certain state
 	 * when called.

@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
@@ -11,7 +13,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.JTableHeader;
 
+import ee.ut.math.tvt.salessystem.ui.model.HistoryItemTableModel;
 import ee.ut.math.tvt.salessystem.ui.model.SalesSystemModel;
+import ee.ut.math.tvt.sinys.OrderView;
 
 /**
  * Encapsulates everything that has to do with the purchase tab (the tab
@@ -54,8 +58,36 @@ public class HistoryTab {
 	private Component drawHistoryMainPane() {
 		JPanel panel = new JPanel();
 
-		JTable table = new JTable(model.getHistoryTableModel());
-
+		final JTable table = new JTable(model.getHistoryTableModel());
+		table.addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mouseReleased(MouseEvent e) {
+			}
+			
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				OrderView ov=new OrderView(table.getSelectedRow()+1,model);				
+			}
+		});
 		JTableHeader header = table.getTableHeader();
 		header.setReorderingAllowed(false);
 

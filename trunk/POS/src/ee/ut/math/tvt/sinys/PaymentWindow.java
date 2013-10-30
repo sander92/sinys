@@ -12,6 +12,7 @@ import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
@@ -39,12 +40,13 @@ public class PaymentWindow extends JFrame {
 	private JLabel changeValue;
 	private JButton acceptButton;
 	private JButton cancelButton;
+	public JLabel allDone;
 
 	public PaymentWindow(final SalesSystemModel model) {
 		this.model = model;
 		int width = 200;
 		int height = 150;
-
+		allDone = new JLabel();
 		rows = model.getCurrentPurchaseTableModel().getTableRows();
 
 		for (SoldItem item : rows) {
@@ -98,8 +100,13 @@ public class PaymentWindow extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				submitCurrentPurchase(model.getCurrentPurchaseTableModel()
-						.getTableRows());
+				if (change >= 0) {
+
+					submitCurrentPurchase(model.getCurrentPurchaseTableModel()
+							.getTableRows());
+				}else{
+					JOptionPane.showMessageDialog(getRootPane(), "Enter value greater or equal to amount to pay", "Attention", JOptionPane.ERROR_MESSAGE, null);
+				}
 			}
 		});
 		textPanel.add(acceptButton);
@@ -133,24 +140,27 @@ public class PaymentWindow extends JFrame {
 
 	public void submitCurrentPurchase(List<SoldItem> goods) {
 		float price = 0;
-		System.out.println(goods.size());
-		
+
 		for (int i = 0; i < goods.size(); i++) {
 			price += goods.get(i).getPrice();
 		}
-		
+
 		Order o = new Order(model.getHistoryTableModel().getRowCount() + 1,
 				price, goods);
 		model.getHistoryTableModel().addItem(o);
-		
 
+		allDone.setText("done");
+		reset();
+		this.setVisible(false);
+		this.dispose();// TODO fix
 	}
-	public void reset(){
+
+	public void reset() {
 		paymentAmount.setText("");
 		changeValue.setText("");
-		change=0;
+		change = 0;
 	}
-	
+
 	public void cancelCurrentPurchase() {
 		this.setVisible(false);
 		reset();
