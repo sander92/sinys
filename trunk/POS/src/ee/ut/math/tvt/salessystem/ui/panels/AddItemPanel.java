@@ -144,8 +144,7 @@ public class AddItemPanel extends JPanel {
 		log.info("New item added to warehouse");
 		reset();
 		setEnabled(false);
-		
-		
+				
 	}
 
 	/**

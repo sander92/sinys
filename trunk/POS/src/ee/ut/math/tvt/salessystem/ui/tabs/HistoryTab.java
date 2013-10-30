@@ -6,7 +6,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
 import javax.swing.BorderFactory;
-import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -19,67 +18,60 @@ import ee.ut.math.tvt.salessystem.ui.model.SalesSystemModel;
  * labelled "History" in the menu).
  */
 public class HistoryTab {
-    
-    // TODO - implement!
 
-    public HistoryTab() {} 
+	// TODO - implement!
 
+	public HistoryTab() {
+	}
 
+	private SalesSystemModel model;
+	private JTable table;
+	public HistoryTab(SalesSystemModel model) {
+		this.model = model;
+	}
 
-	  private SalesSystemModel model;
+	public Component draw() {
+		JPanel panel = new JPanel();
+		panel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		
+		GridBagLayout gb = new GridBagLayout();
+		GridBagConstraints gc = new GridBagConstraints();
+		panel.setLayout(gb);
 
-	  public HistoryTab(SalesSystemModel model) {
-	    this.model = model;
-	  }
+		gc.fill = GridBagConstraints.HORIZONTAL;
+		gc.anchor = GridBagConstraints.NORTH;
+		gc.gridwidth = GridBagConstraints.REMAINDER;
+		gc.weightx = 1.0d;
+		gc.weighty = 0d;
 
+		gc.weighty = 1.0;
+		gc.fill = GridBagConstraints.BOTH;
+		panel.add(drawHistoryMainPane(), gc);
+		return panel;
+	}
 
-	  public Component draw() {
-	    JPanel panel = new JPanel();
-	    panel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+	
+	private Component drawHistoryMainPane() {
+		JPanel panel = new JPanel();
 
-	    GridBagLayout gb = new GridBagLayout();
-	    GridBagConstraints gc = new GridBagConstraints();
-	    panel.setLayout(gb);
+		JTable table = new JTable(model.getHistoryTableModel());
 
-	    gc.fill = GridBagConstraints.HORIZONTAL;
-	    gc.anchor = GridBagConstraints.NORTH;
-	    gc.gridwidth = GridBagConstraints.REMAINDER;
-	    gc.weightx = 1.0d;
-	    gc.weighty = 0d;
+		JTableHeader header = table.getTableHeader();
+		header.setReorderingAllowed(false);
 
+		JScrollPane scrollPane = new JScrollPane(table);
 
+		GridBagConstraints gc = new GridBagConstraints();
+		GridBagLayout gb = new GridBagLayout();
+		gc.fill = GridBagConstraints.BOTH;
+		gc.weightx = 1.0;
+		gc.weighty = 1.0;
 
-	    gc.weighty = 1.0;
-	    gc.fill = GridBagConstraints.BOTH;
-	    panel.add(drawHistoryMainPane(), gc);
-	    return panel;
-	  }
+		panel.setLayout(gb);
+		panel.add(scrollPane, gc);
 
-
-
-
-
-	  private Component drawHistoryMainPane() {
-	    JPanel panel = new JPanel();
-
-	    JTable table = new JTable();
-
-	    JTableHeader header = table.getTableHeader();
-	    header.setReorderingAllowed(false);
-
-	    JScrollPane scrollPane = new JScrollPane(table);
-
-	    GridBagConstraints gc = new GridBagConstraints();
-	    GridBagLayout gb = new GridBagLayout();
-	    gc.fill = GridBagConstraints.BOTH;
-	    gc.weightx = 1.0;
-	    gc.weighty = 1.0;
-
-	    panel.setLayout(gb);
-	    panel.add(scrollPane, gc);
-
-	    panel.setBorder(BorderFactory.createTitledBorder("Order history:"));
-	    return panel;
-	  }
+		panel.setBorder(BorderFactory.createTitledBorder("Order history:"));
+		return panel;
+	}
 
 }
