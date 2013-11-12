@@ -32,6 +32,7 @@ public class Order implements Cloneable, DisplayableItem {
 	private Date date;
 	@Column(name = "total_sum")
 	private float sum;
+	
 	@OneToMany
 	@JoinTable(name = "ORDERS_TO_SOLDITEMS", joinColumns = @JoinColumn(name = "ORDER_ID", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "SOLDITEM_ID", referencedColumnName = "ID"))
 	List<SoldItem> solditems;
@@ -43,6 +44,9 @@ public class Order implements Cloneable, DisplayableItem {
 		this.solditems = solditems;
 	}
 
+	public Order() {
+	}
+	
 	public Date getDate() {
 		return date;
 	}

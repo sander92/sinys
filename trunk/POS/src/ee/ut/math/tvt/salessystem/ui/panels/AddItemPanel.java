@@ -117,8 +117,9 @@ public class AddItemPanel extends JPanel {
 		StockItem s1 = new StockItem((long)model.getWarehouseTableModel().getTableRows().size()+1, itemName.getText(),itemDescription.getText(), Double.parseDouble(itemPrice.getText()), Integer.parseInt(itemQuantity.getText()));
 		List<StockItem> dataset1 = model.getWarehouseTableModel().getTableRows();
 		dataset1.add(s1);
-		model.saveWarehouseState(dataset1);
+		model.getDomainController().saveWarehouseState(dataset1);
 		model.getWarehouseTableModel().fireTableDataChanged();
+		model.updateWarehouseTableModel();
 		log.info("New item added to warehouse");
 		reset();
 		setEnabled(false);

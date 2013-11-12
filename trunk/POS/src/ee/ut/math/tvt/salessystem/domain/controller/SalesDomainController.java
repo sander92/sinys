@@ -2,6 +2,7 @@ package ee.ut.math.tvt.salessystem.domain.controller;
 
 import java.util.List;
 
+import ee.ut.math.tvt.salessystem.domain.data.Order;
 import ee.ut.math.tvt.salessystem.domain.data.SoldItem;
 import ee.ut.math.tvt.salessystem.domain.data.StockItem;
 import ee.ut.math.tvt.salessystem.domain.exception.VerificationFailedException;
@@ -20,6 +21,13 @@ public interface SalesDomainController {
      */
     public List<StockItem> loadWarehouseState();
     
+    /**
+     * Load the current state of the History.
+     * 
+     * @return List of ${link
+     *         ee.ut.math.tvt.salessystem.domain.data.Order}s.
+     */
+    public List<Order> loadHistoryState();
     /**
      * Saves the current state of the warehouse.
      * @param dataset - the dataset to save to file
@@ -51,6 +59,7 @@ public interface SalesDomainController {
      */
     public void submitCurrentPurchase(List<SoldItem> goods) throws VerificationFailedException;
 
+       
     /**end the session*/
     public void endSession();
     

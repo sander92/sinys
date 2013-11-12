@@ -1,13 +1,14 @@
 package ee.ut.math.tvt.salessystem.ui.model;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import org.apache.log4j.Logger;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import ee.ut.math.tvt.salessystem.domain.data.StockItem;
+import ee.ut.math.tvt.salessystem.util.HibernateUtil;
 
 /**
  * Stock item table model.
@@ -43,16 +44,25 @@ public class StockTableModel extends SalesSystemTableModel<StockItem> {
 	 * @param stockItem
 	 */
 	public void addItem(final StockItem stockItem) {
-		try {
-			StockItem item = getItemById(stockItem.getId());
-			item.setQuantity(item.getQuantity() + stockItem.getQuantity());
-			log.debug("Found existing item " + stockItem.getName()
-					+ " increased quantity by " + stockItem.getQuantity());
-		} catch (NoSuchElementException e) {
+		Session s = HibernateUtil.currentSession();
+		StockItem sItem = (StockItem) s.get(StockItem.class, stockItem.getId());
+		Transaction tx = s.beginTransaction();
+
+		if (sItem == null) {
 			rows.add(stockItem);
+			s.save(stockItem);
 			log.debug("Added " + stockItem.getName() + " quantity of "
 					+ stockItem.getQuantity());
+		} else {
+			StockItem thisItem = getItemById(stockItem.getId());
+			sItem.setQuantity(thisItem.getQuantity() + stockItem.getQuantity());
+			s.update(sItem);
+			log.debug("Found existing item " + sItem.getName()
+					+ " increased quantity by " + sItem.getQuantity());
 		}
+		s.flush();
+		tx.commit();
+
 		fireTableDataChanged();
 	}
 
@@ -87,12 +97,28 @@ public class StockTableModel extends SalesSystemTableModel<StockItem> {
 	public void decrementItemQuantityById(long id, int quantityToDecBy) {
 		for (StockItem item : rows) {
 			if (item.getId() == id) {
-				item.setQuantity(item.getQuantity() - quantityToDecBy);
-
+				if ((item.getQuantity() - quantityToDecBy) >= 0) {
+					item.setQuantity(item.getQuantity() - quantityToDecBy);
+				} else {
+					log.error("Cannot make sale. Item quantity would be negative");
+				}
 			}
 
 		}
-		
+		fireTableDataChanged();
 	}
+	
+	public void incrementItemQuantityById(long id, int quantityToIncBy) {
+		for (StockItem item : rows) {
+			if (item.getId() == id) {
+				if ((item.getQuantity() + quantityToIncBy) >= 0) {
+					item.setQuantity(item.getQuantity() + quantityToIncBy);
+				} else {
+					log.error("Illegal move. Item quantity would be negative");
+				}
+			}
 
+		}
+		fireTableDataChanged();
+	}
 }

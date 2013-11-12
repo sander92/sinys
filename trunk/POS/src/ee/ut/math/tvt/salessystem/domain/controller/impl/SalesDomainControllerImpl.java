@@ -1,16 +1,20 @@
 package ee.ut.math.tvt.salessystem.domain.controller.impl;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
 import org.apache.log4j.Logger;
+import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import ee.ut.math.tvt.salessystem.domain.controller.SalesDomainController;
+import ee.ut.math.tvt.salessystem.domain.data.Order;
 import ee.ut.math.tvt.salessystem.domain.data.SoldItem;
 import ee.ut.math.tvt.salessystem.domain.data.StockItem;
 import ee.ut.math.tvt.salessystem.domain.exception.VerificationFailedException;
@@ -64,6 +68,18 @@ public class SalesDomainControllerImpl implements SalesDomainController {
 		return dataset;
 	}
 
+	@SuppressWarnings("unchecked")
+	public List<Order> loadHistoryState() {
+
+		List<Order> dataset = null;
+
+		Session session = HibernateUtil.currentSession();
+
+		Query query = session.createQuery("from Order");
+		dataset = query.list();
+		return dataset;
+	}
+
 	public boolean saveWarehouseState(List<StockItem> dataset) {
 		/*
 		 * ObjectOutputStream oout = null; try { oout = new
@@ -74,16 +90,26 @@ public class SalesDomainControllerImpl implements SalesDomainController {
 		 * finally { try { oout.close(); } catch (Exception e) {
 		 * log.error(e.toString()); } }
 		 */
-		EntityManagerFactory emf = Persistence
-				.createEntityManagerFactory("JPAService");
-		EntityManager em = emf.createEntityManager();
 
-		em.getTransaction().begin();
+		
+	
+		
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
 		for (StockItem stockItem : dataset) {
-			em.persist(stockItem);
+			
+			session.saveOrUpdate(stockItem);
+			session.flush();
+			tx.commit();
 		}
-
 		return true;
+		/*
+		if (tx.wasCommitted())
+			return true;
+		else {
+			log.error("Problem saving warehouse state");
+			return false;
+		}*/
 	}
 
 	public void endSession() {

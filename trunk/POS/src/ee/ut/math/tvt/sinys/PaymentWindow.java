@@ -1,8 +1,6 @@
 package ee.ut.math.tvt.sinys;
 
-import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -23,12 +21,15 @@ import org.apache.log4j.Logger;
 import ee.ut.math.tvt.salessystem.domain.controller.SalesDomainController;
 import ee.ut.math.tvt.salessystem.domain.data.Order;
 import ee.ut.math.tvt.salessystem.domain.data.SoldItem;
-import ee.ut.math.tvt.salessystem.domain.exception.VerificationFailedException;
 import ee.ut.math.tvt.salessystem.ui.model.SalesSystemModel;
 import ee.ut.math.tvt.salessystem.ui.tabs.PurchaseTab;
 
 public class PaymentWindow extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private static final Logger log = Logger.getLogger(PurchaseTab.class);
 	private JTextField paymentAmount;
 	private SalesDomainController domainController;
@@ -104,8 +105,10 @@ public class PaymentWindow extends JFrame {
 
 					submitCurrentPurchase(model.getCurrentPurchaseTableModel()
 							.getTableRows());
-				}else{
-					JOptionPane.showMessageDialog(getRootPane(), "Enter value greater or equal to amount to pay", "Attention", JOptionPane.ERROR_MESSAGE, null);
+				} else {
+					JOptionPane.showMessageDialog(getRootPane(),
+							"Enter value greater or equal to amount to pay",
+							"Attention", JOptionPane.ERROR_MESSAGE, null);
 				}
 			}
 		});
@@ -143,10 +146,16 @@ public class PaymentWindow extends JFrame {
 
 		for (int i = 0; i < goods.size(); i++) {
 			price += goods.get(i).getPrice();
-			model.getWarehouseTableModel().decrementItemQuantityById(goods.get(i).getId(), goods.get(i).getQuantity());
+			model.getWarehouseTableModel().decrementItemQuantityById(
+					goods.get(i).getId(), goods.get(i).getQuantity());
 		}
+		model.getCurrentPurchaseTableModel().addItemsToDB();
 		model.getWarehouseTableModel().fireTableDataChanged();
-		model.saveWarehouseState(model.getWarehouseTableModel().getTableRows());
+		model.getDomainController().saveWarehouseState(
+				model.getWarehouseTableModel().getTableRows());
+		model.updateWarehouseTableModel();
+		model.getWarehouseTableModel().fireTableDataChanged();
+
 		Order o = new Order(model.getHistoryTableModel().getRowCount() + 1,
 				price, goods);
 		model.getHistoryTableModel().addItem(o);
@@ -166,6 +175,10 @@ public class PaymentWindow extends JFrame {
 	public void cancelCurrentPurchase() {
 		this.setVisible(false);
 		reset();
+		List<SoldItem> goods = model.getCurrentPurchaseTableModel().getTableRows();
+		for (int i = 0; i < goods.size(); i++) {
+			model.getWarehouseTableModel().incrementItemQuantityById(
+					goods.get(i).getId(), goods.get(i).getQuantity());
+		}
 	}
-
 }

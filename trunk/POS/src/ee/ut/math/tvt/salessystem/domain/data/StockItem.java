@@ -60,6 +60,7 @@ public class StockItem implements Cloneable, DisplayableItem,Serializable {
         this.price = price;
         this.quantity = quantity;
     }
+    
 
     /**
      * Constructs new  <code>StockItem</code>.

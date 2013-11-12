@@ -1,13 +1,14 @@
 package ee.ut.math.tvt.salessystem.ui.model;
 
 import org.apache.log4j.Logger;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import ee.ut.math.tvt.salessystem.domain.data.Order;
-import ee.ut.math.tvt.salessystem.domain.data.SoldItem;
-import ee.ut.math.tvt.salessystem.ui.SalesSystemUI;
+import ee.ut.math.tvt.salessystem.util.HibernateUtil;
 
 /**
- * Purchase history details model.
+ * Order history details model.
  */
 public class HistoryInfoTableModel extends SalesSystemTableModel<Order> {
 	private static final long serialVersionUID = 1L;
@@ -50,13 +51,19 @@ public class HistoryInfoTableModel extends SalesSystemTableModel<Order> {
 	}
 	
     /**
-     * Add new StockItem to table.
+     * Add new Order to table.
      */
     public void addItem(final Order item) {
-        
-        
         rows.add(item);
+        Session s=HibernateUtil.currentSession();
+        Transaction tx=s.beginTransaction();
+        s.save(item);
+        s.flush();
+        tx.commit();
+        //s.getTransaction().commit();
         log.debug("Added " + item.getName());
         fireTableDataChanged();
     }
+    
+    
 }
