@@ -13,6 +13,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.JTableHeader;
 
+import ee.ut.math.tvt.salessystem.domain.data.Order;
 import ee.ut.math.tvt.salessystem.ui.model.HistoryItemTableModel;
 import ee.ut.math.tvt.salessystem.ui.model.SalesSystemModel;
 import ee.ut.math.tvt.sinys.OrderView;
@@ -85,7 +86,8 @@ public class HistoryTab {
 			
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				OrderView ov=new OrderView(table.getSelectedRow()+1,model);				
+				Long l=(Long) model.getHistoryTableModel().getValueAt(table.getSelectedRow(), 0);
+				OrderView ov=new OrderView(l.intValue(),model);				
 			}
 		});
 		JTableHeader header = table.getTableHeader();
