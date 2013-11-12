@@ -1,6 +1,5 @@
 package ee.ut.math.tvt.salessystem.ui.panels;
 
-
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -12,6 +11,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -71,7 +71,6 @@ public class AddItemPanel extends JPanel {
 
 		// Fill the dialog fields if the bar code text field loses focus
 
-
 		itemDescription.setEditable(false);
 		itemName.setEditable(false);
 		itemPrice.setEditable(false);
@@ -82,8 +81,7 @@ public class AddItemPanel extends JPanel {
 		// - item name
 		panel.add(new JLabel("Item name:"));
 		panel.add(itemName);
-		
-		
+
 		// - item id
 		panel.add(new JLabel("Item description:"));
 		panel.add(itemDescription);
@@ -113,9 +111,26 @@ public class AddItemPanel extends JPanel {
 	 * Add new item to the cart.
 	 */
 	public void addItemEventHandler() {
-		//takes the information from inserted fields, creates a StockItem and adds it to the StockItems list, logs and resets fields
-		StockItem s1 = new StockItem(itemName.getText(),itemDescription.getText(), Double.parseDouble(itemPrice.getText()), Integer.parseInt(itemQuantity.getText()));
-		List<StockItem> dataset1 = model.getWarehouseTableModel().getTableRows();
+		// takes the information from inserted fields, creates a StockItem and
+		// adds it to the StockItems list, logs and resets fields
+		try {
+			if (Integer.parseInt(itemQuantity.getText()) < 0
+					|| itemName.getText().trim().equals("")
+					|| Integer.parseInt(itemPrice.getText()) < 0) {
+				JOptionPane.showMessageDialog(getRootPane(), "Illegal move",
+						"STOP", JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+		} catch (NumberFormatException nfe) {
+			JOptionPane.showMessageDialog(getRootPane(), "Illegal move",
+					"STOP", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		StockItem s1 = new StockItem(itemName.getText(),
+				itemDescription.getText(), Double.parseDouble(itemPrice
+						.getText()), Integer.parseInt(itemQuantity.getText()));
+		List<StockItem> dataset1 = model.getWarehouseTableModel()
+				.getTableRows();
 		dataset1.add(s1);
 		model.getDomainController().saveWarehouseState(dataset1);
 		model.getWarehouseTableModel().fireTableDataChanged();
@@ -123,7 +138,7 @@ public class AddItemPanel extends JPanel {
 		log.info("New item added to warehouse");
 		reset();
 		setEnabled(false);
-				
+
 	}
 
 	/**

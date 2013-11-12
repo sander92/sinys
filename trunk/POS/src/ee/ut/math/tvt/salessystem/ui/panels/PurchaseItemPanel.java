@@ -212,6 +212,17 @@ public class PurchaseItemPanel extends JPanel {
 	 */
 	public void addItemEventHandler() {
 		// add chosen item to the shopping cart.
+		try {
+			if (Integer.parseInt(quantityField.getText()) < 0) {
+				JOptionPane.showMessageDialog(getRootPane(), "Illegal move",
+						"STOP", JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+		} catch (NumberFormatException nfe) {
+			JOptionPane.showMessageDialog(getRootPane(), "Illegal move",
+					"STOP", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
 		StockItem stockItem = null;
 		try {
 			stockItem = getStockItemByName();
