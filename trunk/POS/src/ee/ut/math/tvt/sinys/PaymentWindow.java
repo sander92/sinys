@@ -60,8 +60,8 @@ public class PaymentWindow extends JFrame {
 
 		JLabel sumLabel = new JLabel("Order sum:  ");
 		textPanel.add(sumLabel);
-
-		JLabel sumValue = new JLabel(String.valueOf(Math.round( sum * 100.0 ) / 100.0));
+		sum=Math.round( sum * 100.0 ) / 100.0;
+		JLabel sumValue = new JLabel(String.valueOf(sum));
 		textPanel.add(sumValue);
 
 		JLabel changeLabel = new JLabel("Change:");
