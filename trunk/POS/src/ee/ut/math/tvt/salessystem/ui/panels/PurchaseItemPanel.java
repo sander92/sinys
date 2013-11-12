@@ -6,14 +6,8 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.NoSuchElementException;
 
 import javax.swing.BorderFactory;
@@ -218,8 +212,25 @@ public class PurchaseItemPanel extends JPanel {
 	 */
 	public void addItemEventHandler() {
 		// add chosen item to the shopping cart.
-		StockItem stockItem = getStockItemByName();
-		int quantityWant = Integer.parseInt(quantityField.getText());
+		StockItem stockItem = null;
+		try {
+			stockItem = getStockItemByName();
+		} catch (NoSuchElementException nsee) {
+
+		}
+
+		SoldItem si = null;
+		int alreadyInList = 0;
+		try {
+			si = model.getCurrentPurchaseTableModel().getItemByName(
+					stockItem.getName());
+			alreadyInList = si.getQuantity();
+		} catch (NoSuchElementException nsee) {
+
+		}
+
+		int quantityWant = alreadyInList
+				+ Integer.parseInt(quantityField.getText());
 		if (stockItem != null && (stockItem.getQuantity() - quantityWant >= 0)) {
 			int quantity;
 			try {
@@ -229,18 +240,16 @@ public class PurchaseItemPanel extends JPanel {
 			}
 			model.getCurrentPurchaseTableModel().addItem(
 					new SoldItem(stockItem, quantity));
-		} else {
-			if (stockItem == null) {
-				JOptionPane.showMessageDialog(frame,
-						"There is not such item in the warehouse", "Error",
-						JOptionPane.WARNING_MESSAGE);
-			}
-			if (stockItem.getQuantity() - quantityWant < 0) {
-				JOptionPane.showMessageDialog(frame,
-						"Not enough products in the warehouse", "Error",
-						JOptionPane.WARNING_MESSAGE);
-			}
+		} else if (stockItem == null) {
+			JOptionPane.showMessageDialog(frame,
+					"There is not such item in the warehouse", "Error",
+					JOptionPane.WARNING_MESSAGE);
+		} else if (stockItem.getQuantity() - quantityWant < 0) {
+			JOptionPane.showMessageDialog(frame,
+					"Not enough products in the warehouse", "Error",
+					JOptionPane.WARNING_MESSAGE);
 		}
+
 	}
 
 	/**
@@ -260,7 +269,8 @@ public class PurchaseItemPanel extends JPanel {
 	public void reset() {
 		barCodeField.setText("");
 		quantityField.setText("1");
-		nameField.setModel(new DefaultComboBoxModel<String>((model.getWarehouseTableModel().getItemNames())));
+		nameField.setModel(new DefaultComboBoxModel<String>((model
+				.getWarehouseTableModel().getItemNames())));
 		try {
 			nameField.setSelectedIndex(0);
 		} catch (IllegalArgumentException iae1) {
