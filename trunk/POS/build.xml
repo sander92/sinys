@@ -9,20 +9,48 @@
 	<property name="build.jar.dir" value="${basedir}/build/jar" />
 	<property name="src.dir" value="${basedir}/src" />
 	<property name="dist.dir" value="${basedir}/dist" />
-	<property name="conf.dir" value="${basedir}/etc" />
+	<property name="etc.dir" value="${basedir}/etc" />
+	<property name="conf.dir" value="${basedir}/conf" />
+
 	<property name="res.dir" value="${basedir}/res" />
 	<property name="lib.dir" value="${basedir}/lib" />
+
+	<!-- database variables -->
+	<property name="data.dir" value="data" />
+	<!--${basedir}/-->
+	<property name="db.file" value="${data.dir}/POSdb" />
+	<property name="db.alias" value="POS" />
+	<property name="db.url" value="jdbc:hsqldb:hsql://localhost/POS" />
+	<property name="lib.hibernate.dir" value="${lib.dir}/hibernate" />
 
 	<property name="doc.dir" value="${build.dir}/doc" />
 	<property name="test.reports.dir" value="${build.dir}/reports/" />
 
 	<!-- Definitions of classpath variants used for different tasks -->
 
+	<path id="run.classpath">
+		<pathelement location="${build.classes.dir}" />
+		<!-- configuration -->
+		<pathelement location="${conf.dir}" />
+		<fileset dir="${lib.dir}">
+			<include name="*.jar" />
+		</fileset>
+
+		<fileset dir="${lib.hibernate.dir}">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+
 	<path id="compile.classpath">
 		<fileset dir="${basedir}">
 			<include name="*.properties" />
 		</fileset>
-		<fileset dir="lib">
+
+		<fileset dir="${lib.dir}">
+			<include name="*.jar" />
+		</fileset>
+
+		<fileset dir="${lib.hibernate.dir}">
 			<include name="*.jar" />
 		</fileset>
 	</path>
@@ -62,8 +90,14 @@
 	<path id="test.classpath">
 		<pathelement location="${build.classes.dir}" />
 		<!-- configuration -->
+		<pathelement location="${etc.dir}" />
 		<pathelement location="${conf.dir}" />
+
 		<fileset dir="lib">
+			<include name="*.jar" />
+		</fileset>
+		
+		<fileset dir="${lib.hibernate.dir}">
 			<include name="*.jar" />
 		</fileset>
 	</path>
@@ -221,18 +255,21 @@
 
 	</target>
 
-	<!--target name="git_merge">
+	<target name="dbmanager" description="Start the HSQLDB manager">
+		<java classname="org.hsqldb.util.DatabaseManagerSwing" classpathref="run.classpath" fork="yes">
+			<arg line="--user sa --url ${db.url}" />
+		</java>
+	</target>
 
-		<exec executable="git">
-			<arg value="merge" />
-		</exec>
-	</target-->
+	<target name="startdb" description="Start the HSQLDB with the default params">
+		<java classname="org.hsqldb.Server" classpathref="run.classpath" fork="yes">
+			<arg line="-database.0 '${db.file}' -dbname.0 '${db.alias}'" />
+		</java>
+	</target>
 
-	<!--
-	//TODO git_tag to be done
-	
-	push fix username and pass
-	-->
 
+	<target name="stopdb">
+		<sql classpathref="run.classpath" driver="org.hsqldb.jdbcDriver" url="${db.url}" userid="sa" password="" autocommit="true">SHUTDOWN</sql>
+	</target>
 </project>
 

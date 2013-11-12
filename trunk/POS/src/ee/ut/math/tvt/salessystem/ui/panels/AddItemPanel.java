@@ -6,39 +6,17 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.sql.Savepoint;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.JTextField;
 
 import org.apache.log4j.Logger;
 
-import ee.ut.math.tvt.salessystem.domain.controller.impl.SalesDomainControllerImpl;
-import ee.ut.math.tvt.salessystem.domain.data.SoldItem;
 import ee.ut.math.tvt.salessystem.domain.data.StockItem;
 import ee.ut.math.tvt.salessystem.ui.model.SalesSystemModel;
 
@@ -136,7 +114,7 @@ public class AddItemPanel extends JPanel {
 	 */
 	public void addItemEventHandler() {
 		//takes the information from inserted fields, creates a StockItem and adds it to the StockItems list, logs and resets fields
-		StockItem s1 = new StockItem((long)model.getWarehouseTableModel().getTableRows().size()+1, itemName.getText(),itemDescription.getText(), Integer.parseInt(itemPrice.getText()), Integer.parseInt(itemQuantity.getText()));
+		StockItem s1 = new StockItem((long)model.getWarehouseTableModel().getTableRows().size()+1, itemName.getText(),itemDescription.getText(), Double.parseDouble(itemPrice.getText()), Integer.parseInt(itemQuantity.getText()));
 		List<StockItem> dataset1 = model.getWarehouseTableModel().getTableRows();
 		dataset1.add(s1);
 		model.saveWarehouseState(dataset1);

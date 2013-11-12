@@ -4,22 +4,40 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
 import ee.ut.math.tvt.salessystem.domain.data.SoldItem;
 
-public class Order implements Cloneable, DisplayableItem{
+@Entity
+@Table(name = "ORDER")
+public class Order implements Cloneable, DisplayableItem {
 	@Override
 	public String toString() {
 		return "Order [id=" + id + ", date=" + date + ", sum=" + sum
 				+ ", solditems=" + solditems + "]";
 	}
 
-	long id;
-	Date date;
-	float sum;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private long id;
+	@Column(name = "date")
+	private Date date;
+	@Column(name = "total_sum")
+	private float sum;
+	@OneToMany
+	@JoinTable(name = "ORDERS_TO_SOLDITEMS", joinColumns = @JoinColumn(name = "ORDER_ID", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "SOLDITEM_ID", referencedColumnName = "ID"))
 	List<SoldItem> solditems;
-	
-	public Order(long id,float sum, List<SoldItem> solditems) {
-		this.id=id;
+
+	public Order(long id, float sum, List<SoldItem> solditems) {
+		this.id = id;
 		this.date = Calendar.getInstance().getTime();
 		this.sum = sum;
 		this.solditems = solditems;
@@ -56,7 +74,7 @@ public class Order implements Cloneable, DisplayableItem{
 
 	@Override
 	public String getName() {
-		return "order nr "+id;
+		return "order nr " + id;
 	}
-	
+
 }
