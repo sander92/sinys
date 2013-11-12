@@ -46,15 +46,15 @@ public class StockItem implements Cloneable, DisplayableItem,Serializable {
      * @param desc description of the product
      * @param price price of the product
      */
-    public StockItem(Long id, String name, String desc, double price) {
-        this.id = id;
+    public StockItem(String name, String desc, double price) {
+//        this.id = id;
         this.name = name;
         this.description = desc;
         this.price = price;
     }
     
-    public StockItem(Long id, String name, String desc, double price, int quantity) {
-        this.id = id;
+    public StockItem(String name, String desc, double price, int quantity) {
+//        this.id = id;
         this.name = name;
         this.description = desc;
         this.price = price;
@@ -130,7 +130,7 @@ public class StockItem implements Cloneable, DisplayableItem,Serializable {
     
     public Object clone() {
         StockItem item =
-            new StockItem(getId(), getName(), getDescription(), getPrice(), getQuantity());
+            new StockItem(getName(), getDescription(), getPrice(), getQuantity());
         return item;
     }
 		

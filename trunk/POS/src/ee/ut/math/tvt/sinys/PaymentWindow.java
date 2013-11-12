@@ -175,10 +175,10 @@ public class PaymentWindow extends JFrame {
 	public void cancelCurrentPurchase() {
 		this.setVisible(false);
 		reset();
-		List<SoldItem> goods = model.getCurrentPurchaseTableModel().getTableRows();
-		for (int i = 0; i < goods.size(); i++) {
-			model.getWarehouseTableModel().incrementItemQuantityById(
-					goods.get(i).getId(), goods.get(i).getQuantity());
-		}
+//		List<SoldItem> goods = model.getCurrentPurchaseTableModel().getTableRows();
+//		for (int i = 0; i < goods.size(); i++) {
+//			model.getWarehouseTableModel().incrementItemQuantityById(
+//					goods.get(i).getId(), goods.get(i).getQuantity());
+//		}
 	}
 }

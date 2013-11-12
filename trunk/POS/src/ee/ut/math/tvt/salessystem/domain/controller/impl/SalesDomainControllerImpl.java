@@ -91,25 +91,19 @@ public class SalesDomainControllerImpl implements SalesDomainController {
 		 * log.error(e.toString()); } }
 		 */
 
-		
-	
-		
 		Session session = HibernateUtil.currentSession();
-		Transaction tx = session.beginTransaction();
 		for (StockItem stockItem : dataset) {
-			
+			Transaction tx = session.beginTransaction();
+
 			session.saveOrUpdate(stockItem);
 			session.flush();
 			tx.commit();
 		}
 		return true;
 		/*
-		if (tx.wasCommitted())
-			return true;
-		else {
-			log.error("Problem saving warehouse state");
-			return false;
-		}*/
+		 * if (tx.wasCommitted()) return true; else {
+		 * log.error("Problem saving warehouse state"); return false; }
+		 */
 	}
 
 	public void endSession() {

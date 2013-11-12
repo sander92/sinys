@@ -114,7 +114,7 @@ public class AddItemPanel extends JPanel {
 	 */
 	public void addItemEventHandler() {
 		//takes the information from inserted fields, creates a StockItem and adds it to the StockItems list, logs and resets fields
-		StockItem s1 = new StockItem((long)model.getWarehouseTableModel().getTableRows().size()+1, itemName.getText(),itemDescription.getText(), Double.parseDouble(itemPrice.getText()), Integer.parseInt(itemQuantity.getText()));
+		StockItem s1 = new StockItem(itemName.getText(),itemDescription.getText(), Double.parseDouble(itemPrice.getText()), Integer.parseInt(itemQuantity.getText()));
 		List<StockItem> dataset1 = model.getWarehouseTableModel().getTableRows();
 		dataset1.add(s1);
 		model.getDomainController().saveWarehouseState(dataset1);

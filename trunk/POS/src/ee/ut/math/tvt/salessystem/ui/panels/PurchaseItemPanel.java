@@ -17,6 +17,7 @@ import java.beans.PropertyChangeListener;
 import java.util.NoSuchElementException;
 
 import javax.swing.BorderFactory;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
@@ -218,8 +219,8 @@ public class PurchaseItemPanel extends JPanel {
 	public void addItemEventHandler() {
 		// add chosen item to the shopping cart.
 		StockItem stockItem = getStockItemByName();
-		int quantityWant=Integer.parseInt(quantityField.getText());
-		if (stockItem != null && (stockItem.getQuantity()-quantityWant >= 0)) {
+		int quantityWant = Integer.parseInt(quantityField.getText());
+		if (stockItem != null && (stockItem.getQuantity() - quantityWant >= 0)) {
 			int quantity;
 			try {
 				quantity = Integer.parseInt(quantityField.getText());
@@ -234,7 +235,7 @@ public class PurchaseItemPanel extends JPanel {
 						"There is not such item in the warehouse", "Error",
 						JOptionPane.WARNING_MESSAGE);
 			}
-			if (stockItem.getQuantity()-quantityWant < 0) {
+			if (stockItem.getQuantity() - quantityWant < 0) {
 				JOptionPane.showMessageDialog(frame,
 						"Not enough products in the warehouse", "Error",
 						JOptionPane.WARNING_MESSAGE);
@@ -250,6 +251,7 @@ public class PurchaseItemPanel extends JPanel {
 		this.addItemButton.setEnabled(enabled);
 		this.nameField.setEnabled(enabled);
 		this.quantityField.setEnabled(enabled);
+
 	}
 
 	/**
@@ -258,6 +260,7 @@ public class PurchaseItemPanel extends JPanel {
 	public void reset() {
 		barCodeField.setText("");
 		quantityField.setText("1");
+		nameField.setModel(new DefaultComboBoxModel<String>((model.getWarehouseTableModel().getItemNames())));
 		try {
 			nameField.setSelectedIndex(0);
 		} catch (IllegalArgumentException iae1) {
