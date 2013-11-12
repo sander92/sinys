@@ -145,7 +145,7 @@ public class PaymentWindow extends JFrame {
 		float price = 0;
 
 		for (int i = 0; i < goods.size(); i++) {
-			price += goods.get(i).getPrice();
+			price += goods.get(i).getSum();
 			model.getWarehouseTableModel().decrementItemQuantityById(
 					goods.get(i).getId(), goods.get(i).getQuantity());
 		}
@@ -155,7 +155,7 @@ public class PaymentWindow extends JFrame {
 				model.getWarehouseTableModel().getTableRows());
 		model.updateWarehouseTableModel();
 		model.getWarehouseTableModel().fireTableDataChanged();
-
+		price=(float) (Math.round( price * 100.0 ) / 100.0);
 		Order o = new Order(model.getHistoryTableModel().getRowCount() + 1,
 				price, goods);
 		model.getHistoryTableModel().addItem(o);
