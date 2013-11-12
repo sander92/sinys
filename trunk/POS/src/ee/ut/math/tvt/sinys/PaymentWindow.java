@@ -61,7 +61,7 @@ public class PaymentWindow extends JFrame {
 		JLabel sumLabel = new JLabel("Order sum:  ");
 		textPanel.add(sumLabel);
 
-		JLabel sumValue = new JLabel(String.valueOf(sum));
+		JLabel sumValue = new JLabel(String.valueOf(Math.round( sum * 100.0 ) / 100.0));
 		textPanel.add(sumValue);
 
 		JLabel changeLabel = new JLabel("Change:");
@@ -135,6 +135,7 @@ public class PaymentWindow extends JFrame {
 		try {
 			double payment = Double.parseDouble(paymentAmount.getText());
 			change = payment - sum;
+			change=Math.round( change * 100.0 ) / 100.0;
 		} catch (Exception e1) {
 			e1.getMessage();
 		}

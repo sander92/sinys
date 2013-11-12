@@ -30,11 +30,17 @@ public class SoldItem implements Cloneable, DisplayableItem {
     	this.id = stockItem.getId();
         this.stockItem = stockItem;
         this.name = stockItem.getName();
-        this.price = stockItem.getPrice()*quantity;
+        this.price = stockItem.getPrice();
         this.quantity = quantity;
         
     }
-    public SoldItem() {
+    public double getPrice() {
+		return price;
+	}
+	public void setPrice(double price) {
+		this.price = price;
+	}
+	public SoldItem() {
     	        
     }
     
@@ -55,14 +61,6 @@ public class SoldItem implements Cloneable, DisplayableItem {
         this.name = name;
     }
     
-    public double getPrice() {
-        return price;
-    }
-    
-    public void setPrice(double price) {
-        this.price = price;
-    }
-    
     public Integer getQuantity() {
         return quantity;
     }
@@ -72,7 +70,7 @@ public class SoldItem implements Cloneable, DisplayableItem {
     }
 
     public double getSum() {
-        return price * ((double) quantity);
+        return price*quantity;
     }
 
     public StockItem getStockItem() {
