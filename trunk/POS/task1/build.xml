@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." name="SinysApp" default="build">
+
+	<!-- Definitions of variables used during the rest of this script -->
+
+	<property file="build.properties" />
+	<property name="build.dir" value="${basedir}/build" />
+	<property name="build.classes.dir" value="${build.dir}/classes" />
+	<property name="build.jar.dir" value="${basedir}/build/jar" />
+	<property name="src.dir" value="${basedir}/src" />
+	<property name="dist.dir" value="${basedir}/dist" />
+	<property name="etc.dir" value="${basedir}/etc" />
+	<property name="conf.dir" value="${basedir}/conf" />
+
+	<property name="res.dir" value="${basedir}/res" />
+	<property name="lib.dir" value="${basedir}/lib" />
+
+	<!-- database variables -->
+	<property name="data.dir" value="data" />
+	<!--${basedir}/-->
+	<property name="db.file" value="${data.dir}/POSdb" />
+	<property name="db.alias" value="POS" />
+	<property name="db.url" value="jdbc:hsqldb:hsql://localhost/POS" />
+	<property name="lib.hibernate.dir" value="${lib.dir}/hibernate" />
+
+	<property name="doc.dir" value="${build.dir}/doc" />
+	<property name="test.reports.dir" value="${build.dir}/reports/" />
+
+	<!-- Definitions of classpath variants used for different tasks -->
+
+	<path id="run.classpath">
+		<pathelement location="${build.classes.dir}" />
+		<!-- configuration -->
+		<pathelement location="${conf.dir}" />
+		<fileset dir="${lib.dir}">
+			<include name="*.jar" />
+		</fileset>
+
+		<fileset dir="${lib.hibernate.dir}">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+
+	<path id="compile.classpath">
+		<fileset dir="${basedir}">
+			<include name="*.properties" />
+		</fileset>
+
+		<fileset dir="${lib.dir}">
+			<include name="*.jar" />
+		</fileset>
+
+		<fileset dir="${lib.hibernate.dir}">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+
+	<path id="build.classpath">
+		<fileset dir="${basedir}">
+			<include name="lib/*.jar" />
+			<include name="*.properties" />
+
+		</fileset>
+	</path>
+
+	<pathconvert property="manifest.classpath" pathsep=" ">
+		<path refid="build.classpath" />
+		<mapper>
+			<chainedmapper>
+				<flattenmapper />
+				<globmapper from="*.jar" to="lib/*.jar" />
+			</chainedmapper>
+		</mapper>
+	</pathconvert>
+
+	<pathconvert property="mf.classpath" pathsep=" ">
+		<path refid="build.classpath" />
+		<mapper>
+			<chainedmapper>
+				<flattenmapper />
+				<globmapper from="*.properties" to="etc/*.properties" />
+			</chainedmapper>
+		</mapper>
+	</pathconvert>
+
+	<patternset id="properties.files">
+		<include name="**/*.properties" />
+	</patternset>
+
+	<path id="test.classpath">
+		<pathelement location="${build.classes.dir}" />
+		<!-- configuration -->
+		<pathelement location="${etc.dir}" />
+		<pathelement location="${conf.dir}" />
+
+		<fileset dir="lib">
+			<include name="*.jar" />
+		</fileset>
+		
+		<fileset dir="${lib.hibernate.dir}">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+
+	<!-- Definitions of runnable ant targets.
+         Run them from the command line by executing "ant [targetname]"  -->
+
+	<target name="run" depends="clean,build" description="Run the application">
+		<!--java classname="ee.ut.math.tvt.sinys.Intro" classpathref="test.classpath" fork="yes" /-->
+
+		<java classname="ee.ut.math.tvt.sinys.Intro" classpathref="test.classpath" fork="yes">
+			<jvmarg value="-Xdebug" />
+			<jvmarg value="-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=1044" />
+		</java>
+	</target>
+
+
+	<target name="dist" depends="build" description="Run the application">
+		<mkdir dir="${build.dir}/jar" />
+		<property file="etc/version.properties" />
+
+		<propertyfile file="etc/version.properties">
+			<entry key="build.revision.number" type="int" operation="+" value="1" />
+			<entry key="build.number" value="${build.major.number}.${build.minor.number}.${build.revision.number}" />
+		</propertyfile>
+
+		<echo message="lib ${lib.dir}" />
+		<echo message="res ${res.dir}" />
+
+
+		<jar destfile="${build.jar.dir}/sinys.jar">
+			<manifest>
+				<attribute name="main-class" value="ee.ut.math.tvt.sinys.Intro" />
+				<!--attribute name="Class-Path" value="${mf.classpath}" /-->
+			</manifest>
+			<fileset dir="${build.classes.dir}" />
+
+			<fileset dir="${basedir}" includes="etc/*" />
+			<fileset dir="${basedir}" includes="res/*" />
+
+			<!--fileset dir="${basedir}/">
+				<include name="${conf.dir}/*.properties" />
+			</fileset-->
+			<zipgroupfileset dir="${lib.dir}" includes="*.jar" />
+		</jar>
+
+
+	</target>
+
+	<target name="jrun" depends="dist" description="JRun the application">
+		<java jar="${build.dir}/jar/sinys.jar" fork="true">
+		</java>
+	</target>
+
+	<target name="build" depends="clean" description="Build the system">
+		<mkdir dir="${build.dir}" />
+		<mkdir dir="${build.classes.dir}" />
+		<javac srcdir="${src.dir}" destdir="${build.classes.dir}" debug="true" debuglevel="lines,vars,source" encoding="utf-8" compiler="modern" target="1.7" source="1.7" includeantruntime="false">
+			<classpath refid="compile.classpath" />
+		</javac>
+
+	</target>
+
+	<!-- Build internal documentation -->
+	<target name="javadoc" description="Build internal documentation">
+		<mkdir dir="${doc.dir}" />
+		<javadoc destdir="${doc.dir}" classpathref="compile.classpath">
+			<fileset dir="${src.dir}" includes="**/*.java" />
+		</javadoc>
+	</target>
+
+	<!-- Clean up build system results -->
+	<target name="clean" description="Clean up build system results">
+		<delete dir="${build.dir}" />
+	</target>
+
+	<target name="runc" depends="build" description="Run the application (console)">
+		<java classname="ee.ut.math.tvt.sinys.Intro" classpathref="test.classpath" fork="yes">
+			<arg value="console" />
+		</java>
+	</target>
+
+	<!--GIT tasks-->
+	<target name="git_add">
+		<exec executable="git">
+			<arg value="add" />
+			<arg value="-A" />
+		</exec>
+	</target>
+
+	<target name="git_commit" depends="git_add">
+		<input message="Please enter commit message:" addproperty="message" />
+		<exec executable="git">
+			<arg value="commit" />
+			<arg value="-m" />
+			<arg value="${message}" />
+		</exec>
+
+		<antcall target="git_push" />
+
+	</target>
+
+
+	<target name="git_push">
+		<input message="Please enter git username:" addproperty="git_user" />
+		<input message="Please enter git password:" addproperty="git_pass" />
+
+		<exec executable="git">
+			<arg value="push" />
+			<arg value="https://${git_user}:${git_pass}@github.com/sander92/sinys.git" />
+
+		</exec>
+	</target>
+
+	<target name="git_tag">
+		<input message="Please enter git tag name:" addproperty="git_tag" />
+		<input message="Please enter git comment:" addproperty="git_comm" />
+
+
+		<input message="Please enter git username:" addproperty="git_user" />
+		<input message="Please enter git password:" addproperty="git_pass" />
+
+		<echo message="making tag" />
+
+		<exec executable="git">
+			<arg value="tag" />
+			<arg value="-a" />
+			<arg value="${git_tag}" />
+			<arg value="-m" />
+			<arg value="'${git_comm}'" />
+		</exec>
+		<echo message="pushing tag" />
+
+		<exec executable="git">
+			<arg value="push" />
+			<arg value="https://${git_user}:${git_pass}@github.com/sander92/sinys.git" />
+			<arg value="--tags" />
+		</exec>
+		<echo message="tag push finished" />
+
+	</target>
+
+	<target name="git_pull">
+		<antcall target="git_fetch" />
+		<!--antcall target="git_merge" /-->
+
+	</target>
+
+	<target name="git_fetch">
+		<exec executable="git">
+			<arg value="fetch" />
+			<arg value="origin" />
+
+		</exec>
+
+	</target>
+
+	<target name="dbmanager" description="Start the HSQLDB manager">
+		<java classname="org.hsqldb.util.DatabaseManagerSwing" classpathref="run.classpath" fork="yes">
+			<arg line="--user sa --url ${db.url}" />
+		</java>
+	</target>
+
+	<target name="startdb" description="Start the HSQLDB with the default params">
+		<java classname="org.hsqldb.Server" classpathref="run.classpath" fork="yes">
+			<arg line="-database.0 '${db.file}' -dbname.0 '${db.alias}'" />
+		</java>
+	</target>
+
+
+	<target name="stopdb">
+		<sql classpathref="run.classpath" driver="org.hsqldb.jdbcDriver" url="${db.url}" userid="sa" password="" autocommit="true">SHUTDOWN</sql>
+	</target>
+</project>
+

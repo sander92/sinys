@@ -1,0 +1,10 @@
+2013-11-26 23:24:58,597 [main] DEBUG - Strating SalesSystem with the Swing UI ..
+2013-11-26 23:24:58,839 [main] INFO - 5 items loaded from disk
+2013-11-26 23:24:58,845 [main] INFO - 1 clients loaded from disk
+2013-11-26 23:24:58,862 [main] INFO - 10 Sales loaded from disk
+2013-11-26 23:24:59,162 [main] INFO - SalesSystem started
+2013-11-26 23:25:03,035 [AWT-EventQueue-0] INFO - 5 items loaded from disk
+2013-11-26 23:25:06,386 [AWT-EventQueue-0] INFO - 10 Sales loaded from disk
+2013-11-26 23:25:10,771 [AWT-EventQueue-0] INFO - 1 clients loaded from disk
+2013-11-26 23:25:12,443 [AWT-EventQueue-0] INFO - 5 items loaded from disk
+2013-11-26 23:25:20,260 [AWT-EventQueue-0] INFO - SalesSystem closed

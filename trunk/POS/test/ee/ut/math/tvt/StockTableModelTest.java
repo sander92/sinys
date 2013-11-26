@@ -1,8 +1,7 @@
 package ee.ut.math.tvt;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
-import java.util.List;
 import java.util.NoSuchElementException;
 
 import junit.framework.Assert;
@@ -11,21 +10,23 @@ import org.junit.Before;
 import org.junit.Test;
 
 import ee.ut.math.tvt.salessystem.domain.controller.SalesDomainController;
-import ee.ut.math.tvt.salessystem.domain.data.StockItem;
+import ee.ut.math.tvt.salessystem.domain.controller.impl.SalesDomainControllerImpl;
 import ee.ut.math.tvt.salessystem.ui.model.SalesSystemModel;
 import ee.ut.math.tvt.salessystem.ui.model.StockTableModel;
 
 public class StockTableModelTest {
+	private SalesSystemModel ssm;
 	private StockTableModel model;
-	
+	private SalesDomainController dc;
 	@Before
 	public void setUp() {
 		// proovisin ka nii, et tekitasin siia salesdomaincontrolleri new SalesDomainControllerImpl(),
 		// salessystemmodeli selle sdc'ga ning siis StockTableModeli salessystem.getWarehouseModel värgiga,
 		// siis viskab hunniku log4j erroreid ette. praegu on viga selles ilmselt, et ta laeb seest tühja
 		// stocktablemodeli
-		model = new StockTableModel();
-		
+		dc=new SalesDomainControllerImpl();
+		ssm = new SalesSystemModel(dc);
+		model=ssm.getWarehouseTableModel();
 	}
 	
 	@Test
