@@ -43,33 +43,32 @@ public abstract class SalesSystemTableModel<T extends DisplayableItem> extends
     }
 
     public int getRowCount() {
-        return rows.size();
+        return getTableRows().size();
     }
 
     public Object getValueAt(final int rowIndex, final int columnIndex) {
-        return getColumnValue(rows.get(rowIndex), columnIndex);
+        return getColumnValue(getTableRows().get(rowIndex), columnIndex);
     }
 
     // search for item with the specified id
     public T getItemById(final long id) {
-        for (final T item : rows) {
+        for (final T item : getTableRows()) {
             if (item.getId() == id)
                 return item;
         }
         throw new NoSuchElementException();
     }
 
-    public List<T> getTableRows() {
-        return rows;
-    }
+    public abstract List<T> getTableRows();
+    public abstract void clearTableRows();
 
     public void clear() {
-        rows = new ArrayList<T>();
+        clearTableRows();
         fireTableDataChanged();
     }
 
     public void populateWithData(final List<T> data) {
-        rows.clear();
+        clear();
         rows.addAll(data);
     }
     
