@@ -1,5 +1,7 @@
 package ee.ut.math.tvt;
 
+import static org.junit.Assert.*;
+
 import java.util.List;
 
 import org.junit.Before;
@@ -11,31 +13,36 @@ import ee.ut.math.tvt.salessystem.ui.model.SalesSystemModel;
 import ee.ut.math.tvt.salessystem.ui.model.StockTableModel;
 
 public class StockTableModelTest {
-	private SalesDomainController model;
-	private List<StockItem> warehouse;
+	private StockTableModel model;
 	
 	@Before
 	public void setUp() {
-		warehouse = model.loadWarehouseState();
+		// proovisin ka nii, et tekitasin siia salesdomaincontrolleri new SalesDomainControllerImpl(),
+		// salessystemmodeli selle sdc'ga ning siis StockTableModeli salessystem.getWarehouseModel värgiga,
+		// siis viskab hunniku log4j erroreid ette. praegu on viga selles ilmselt, et ta laeb seest tühja
+		// stocktablemodeli
+		model = new StockTableModel();
+		
 	}
 	
 	@Test
 	public void testValidateNameUniqueness() {
-		//TODO
+		assertEquals(false, model.validateNameUniqueness("Cookies"));
 	}
 	
 	@Test
 	public void testHasEnoughInStock() {
-		//TODO
+		assertEquals(false, model.hasEnoughInStock(model.getItemByName("Cookies"), 38));
+		assertEquals(true, model.hasEnoughInStock(model.getItemByName("Cookies"), 12));
 	}
 	
 	@Test
 	public void testGetItemByIdWhenItemExists() {
-		//TODO
+		assertEquals("Cookies", model.getItemById(1).getName());
 	}
 	
 	@Test
 	public void testGetItemByIdWhenThrowsException() {
-		//TODO
+		assertEquals("", model.getItemById(100).getName());
 	}
 }

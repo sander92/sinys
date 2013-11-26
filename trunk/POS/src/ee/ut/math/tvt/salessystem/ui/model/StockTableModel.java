@@ -121,4 +121,26 @@ public class StockTableModel extends SalesSystemTableModel<StockItem> {
 		}
 		fireTableDataChanged();
 	}
+	
+	
+	public boolean hasEnoughInStock(StockItem item, int quantity) {
+		for(StockItem i : this.rows) {
+			if (i.getId().equals(item.getId())) {
+				return (i.getQuantity() >= quantity);
+			}
+		}
+		return false;
+	}
+	
+	
+	public boolean validateNameUniqueness(String newName) {
+		for (StockItem item : rows) {
+			log.debug(" === Comparing: " + newName + " vs. " + item.getName());
+			
+			if (newName.equals(item.getName())) {
+				return false;
+			}
+		}
+		return true;
+	}
 }

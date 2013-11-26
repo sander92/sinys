@@ -41,7 +41,7 @@ public class SalesSystemModel {
 		this.domainController = domainController;
 
 		warehouseTableModel = new StockTableModel();
-		currentPurchaseTableModel = new PurchaseInfoTableModel();
+		currentPurchaseTableModel = new PurchaseInfoTableModel(this);
 		historyTableModel = new HistoryInfoTableModel();
 		historyItemTableModel = new HistoryItemTableModel();
 		// populate stock model with data from the warehouse

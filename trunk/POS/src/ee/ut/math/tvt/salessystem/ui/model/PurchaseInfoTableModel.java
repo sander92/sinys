@@ -7,6 +7,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import ee.ut.math.tvt.salessystem.domain.data.SoldItem;
+import ee.ut.math.tvt.salessystem.domain.data.StockItem;
 import ee.ut.math.tvt.salessystem.util.HibernateUtil;
 
 /**
@@ -17,9 +18,16 @@ public class PurchaseInfoTableModel extends SalesSystemTableModel<SoldItem> {
 
 	private static final Logger log = Logger
 			.getLogger(PurchaseInfoTableModel.class);
+	
+	private SalesSystemModel model;
 
 	public PurchaseInfoTableModel() {
 		super(new String[] { "Id", "Name", "Price", "Quantity", "Sum" });
+	}
+	
+	public PurchaseInfoTableModel(SalesSystemModel model) {
+		this();
+		this.model = model;
 	}
 
 	@Override
@@ -58,39 +66,42 @@ public class PurchaseInfoTableModel extends SalesSystemTableModel<SoldItem> {
 
 		return buffer.toString();
 	}
+	
+	public SoldItem getForStockItem(long stockItemId) {
+		for (SoldItem item : rows) {
+			if (item.getStockItem().getId().equals(stockItemId)) {
+				return item;
+			}
+		}
+		return null;
+	}
+
 
 	/**
 	 * Add new StockItem to table.
 	 */
-	public void addItem(final SoldItem item) {
-		/**
-		 * XXX In case such stockItem already exists increase the quantity of
-		 * the existing stock.
-		 */
+	public void addItem(final SoldItem soldItem) {
 
-		SoldItem sItem = null;
-		try {
-			sItem = getItemById(item.getId());
-		} catch (NoSuchElementException nsee) {
+		StockItem stockItem = soldItem.getStockItem();
+		long stockItemId = stockItem.getId();
+		SoldItem existingItem = getForStockItem(stockItemId);
 
-		}
-		if (sItem == null) {
-			rows.add(item);
-			log.debug("Added " + item.getName() + " quantity of "
-					+ item.getQuantity());
+		if (existingItem != null) {
+			int totalQuantity = existingItem.getQuantity() + soldItem.getQuantity();
+			validateQuantityInStock(stockItem, totalQuantity);
+			existingItem.setQuantity(totalQuantity);
+
+			log.debug("Found existing item " + soldItem.getName()
+					+ " increased quantity by " + soldItem.getQuantity());
+
 		} else {
-			SoldItem thisItem = getItemById(item.getId());
-			sItem.setQuantity(thisItem.getQuantity() + item.getQuantity());
-			log.debug("Found existing item " + sItem.getName()
-					+ " increased quantity by " + sItem.getQuantity());
+			validateQuantityInStock(soldItem.getStockItem(), soldItem.getQuantity());
+			rows.add(soldItem);
+			log.debug("Added " + soldItem.getName()
+					+ " quantity of " + soldItem.getQuantity());
 		}
 
 		fireTableDataChanged();
-
-		/*
-		 * rows.add(item); log.debug("Added " + item.getName() + " quantity of "
-		 * + item.getQuantity()); fireTableDataChanged();
-		 */
 	}
 
 	public void addItemsToDB() {
@@ -101,6 +112,12 @@ public class PurchaseInfoTableModel extends SalesSystemTableModel<SoldItem> {
 			s.save(item);
 			s.flush();
 			tx.commit();
+		}
+
+	}
+	private void validateQuantityInStock(StockItem item, int quantity) {
+		if (!model.getWarehouseTableModel().hasEnoughInStock(item, quantity)) {
+			log.info(" -- not enough in stock!");
 		}
 
 	}
