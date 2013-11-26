@@ -80,5 +80,11 @@ public class Order implements Cloneable, DisplayableItem {
 	public String getName() {
 		return "order nr " + id;
 	}
+	
+	public void addItemToOrder(SoldItem item) {
+		solditems.add(item);
+		sum+=item.getSum();
+	}
+	
 
 }
