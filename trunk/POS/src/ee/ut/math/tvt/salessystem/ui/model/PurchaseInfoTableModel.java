@@ -1,7 +1,5 @@
 package ee.ut.math.tvt.salessystem.ui.model;
 
-import java.util.NoSuchElementException;
-
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
