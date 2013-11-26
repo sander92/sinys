@@ -21,7 +21,7 @@ public class OrderTest {
 
 	@Before
 	public void setUp() {
-		stockItem1 = new StockItem("Õunamahl", "jook", 0.90, 200);
+		stockItem1 = new StockItem("Ãµunamahl", "jook", 0.90, 200);
 		item1 = new SoldItem(stockItem1, 0);
 		item2 = new SoldItem(stockItem1, 1);
 		item3 = new SoldItem(stockItem1, 10);
@@ -32,7 +32,7 @@ public class OrderTest {
 	public void testAddSoldItem() {
 		order.addItemToOrder(item1);
 
-		assertEquals("Õunamahl", order.getSolditems().get(0).getName());
+		assertEquals("Ãµunamahl", order.getSolditems().get(0).getName());
 		assertEquals(1, order.getSolditems().size());
 
 	}
