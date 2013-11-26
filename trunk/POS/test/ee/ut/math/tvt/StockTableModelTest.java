@@ -20,10 +20,6 @@ public class StockTableModelTest {
 	private SalesDomainController dc;
 	@Before
 	public void setUp() {
-		// proovisin ka nii, et tekitasin siia salesdomaincontrolleri new SalesDomainControllerImpl(),
-		// salessystemmodeli selle sdc'ga ning siis StockTableModeli salessystem.getWarehouseModel värgiga,
-		// siis viskab hunniku log4j erroreid ette. praegu on viga selles ilmselt, et ta laeb seest tühja
-		// stocktablemodeli
 		dc=new SalesDomainControllerImpl();
 		ssm = new SalesSystemModel(dc);
 		model=ssm.getWarehouseTableModel();
