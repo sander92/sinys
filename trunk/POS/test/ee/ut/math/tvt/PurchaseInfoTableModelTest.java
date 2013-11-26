@@ -30,18 +30,6 @@ public class PurchaseInfoTableModelTest {
 		item1 = new SoldItem(item3, 2);
 	}
 
-//	@Test
-//	public void testGetForStockItem() {
-//		model.addItem(item1);
-//		SoldItem x = model.getForStockItem(item1.getId());
-//		try {
-//			assertEquals(item1.getId(), x.getId());
-//			assertEquals(item1.getName(), x.getName());
-//		} catch (NullPointerException npe) {
-//			Assert.fail();
-//		}
-//
-//	}
 
 	@Test
 	public void testAddItem() {
@@ -54,7 +42,6 @@ public class PurchaseInfoTableModelTest {
 		} catch (NullPointerException npe) {
 			Assert.fail();
 		}
-
 	}
 	
 	@Test
@@ -69,6 +56,8 @@ public class PurchaseInfoTableModelTest {
 		assertEquals(1, model.getRowCount());
 		model.clear();
 		assertEquals(0, model.getRowCount());
-
+		
 	}
+	
+	
 }
