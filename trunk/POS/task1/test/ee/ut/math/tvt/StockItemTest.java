@@ -19,18 +19,22 @@ public class StockItemTest {
 	*/
 	@Before
 	public void setUp() {
-		item1 = new StockItem("ılu", "jook", 0.69, 200);
-		item2 = new StockItem("krıps", "snack", 0.99, 150);
+		item1 = new StockItem("√µlu", "jook", 0.69, 200);
+		item2 = new StockItem("kr√µps", "snack", 0.99, 150);
 	}
 	
 	@Test
 	public void testClone() {
 		item3 = (StockItem) item1.clone();
-		assertEquals(item1, item3);
+		assertEquals(item1.getId(), item3.getId());
+		assertEquals(item1.getName(), item3.getName());
+		assertEquals(item1.getPrice(), item3.getPrice(),0.0001);
+		assertEquals(item1.getQuantity(), item3.getQuantity(),0.0001);
+
 	}
 	
 	@Test
 	public void testGetColumn() {
-		assertEquals("ılu", item1.getColumn(1));
+		assertEquals("√µlu", item1.getColumn(1));
 	}
 }

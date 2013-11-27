@@ -2,7 +2,6 @@ package ee.ut.math.tvt.salessystem.ui.model;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import org.apache.log4j.Logger;
 
@@ -145,7 +144,8 @@ public class PurchaseInfoTableModel extends SalesSystemTableModel<SoldItem> {
 	 * Sale. (Used by the history details table in the HistoryTab).
 	 */
 	public void showSale(Sale sale) {
-		rows=sale.getSoldItems();
+//		rows=sale.getSoldItems();
+		this.sale=sale;
 		fireTableDataChanged();
 	}
 
@@ -155,52 +155,15 @@ public class PurchaseInfoTableModel extends SalesSystemTableModel<SoldItem> {
 		sale.getSoldItems().clear();
         fireTableDataChanged();
 	}
-	
-	@Override
-    public int getRowCount() {
-        return rows.size();
-    }
 
 	@Override
-    public Object getValueAt(final int rowIndex, final int columnIndex) {
-        return getColumnValue(rows.get(rowIndex), columnIndex);
-    }
-
-    // search for item with the specified id
-	@Override
-    public SoldItem getItemById(final long id) {
-        for (final SoldItem item : sale.getSoldItems()) {
-            if (item.getId() == id)
-                return item;
-        }
-        throw new NoSuchElementException();
-    }
-	
-	@Override
-    public List<SoldItem> getTableRows() {
-        return sale.getSoldItems();
-    }
+	public List<SoldItem> getTableRows() {
+		return sale.getSoldItems();
+	}
 
 	@Override
-    public void populateWithData(final List<SoldItem> data) {
-        clear();
-        sale.setSoldItems(data);
-        fireTableDataChanged();
-    }
-	
-	@Override
-    public void addRow(SoldItem row) {
-        sale.addSoldItem(row);
-        fireTableDataChanged();
-    }
-    
-	@Override
-    public SoldItem getRow(int index) {
-        return sale.getSoldItems().get(index);
-    }
-    
-	@Override
-    public List<SoldItem> getRows() {
-        return sale.getSoldItems();
-    }
+	public void clearTableRows() {
+		clear();		
+	}
+
 }

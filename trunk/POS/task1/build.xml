@@ -15,6 +15,11 @@
 	<property name="res.dir" value="${basedir}/res" />
 	<property name="lib.dir" value="${basedir}/lib" />
 
+
+	<property name="test.dir" value="${basedir}/test" />
+
+
+
 	<!-- database variables -->
 	<property name="data.dir" value="data" />
 	<!--${basedir}/-->
@@ -26,7 +31,33 @@
 	<property name="doc.dir" value="${build.dir}/doc" />
 	<property name="test.reports.dir" value="${build.dir}/reports/" />
 
+
+	<property name="build.classes.dir" value="${build.dir}/classes" />
+	<property name="build.test.dir" value="${build.dir}/test" />
+
 	<!-- Definitions of classpath variants used for different tasks -->
+
+
+	<path id="libs">
+		<fileset dir="${lib.dir}">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+
+
+	<path id="test-classpath">
+		<pathelement location="${conf.dir}" />
+
+		<fileset dir="${lib.dir}">
+			<include name="*.jar" />
+		</fileset>
+		<pathelement path="${build.classes.dir}/" />
+		<pathelement path="${build.test.dir}/" />
+
+		<fileset dir="${lib.hibernate.dir}">
+			<include name="*.jar" />
+		</fileset>
+	</path>
 
 	<path id="run.classpath">
 		<pathelement location="${build.classes.dir}" />
@@ -96,7 +127,7 @@
 		<fileset dir="lib">
 			<include name="*.jar" />
 		</fileset>
-		
+
 		<fileset dir="${lib.hibernate.dir}">
 			<include name="*.jar" />
 		</fileset>
@@ -155,6 +186,7 @@
 	<target name="build" depends="clean" description="Build the system">
 		<mkdir dir="${build.dir}" />
 		<mkdir dir="${build.classes.dir}" />
+		<mkdir dir="${build.test.dir}" />
 		<javac srcdir="${src.dir}" destdir="${build.classes.dir}" debug="true" debuglevel="lines,vars,source" encoding="utf-8" compiler="modern" target="1.7" source="1.7" includeantruntime="false">
 			<classpath refid="compile.classpath" />
 		</javac>
@@ -270,6 +302,35 @@
 
 	<target name="stopdb">
 		<sql classpathref="run.classpath" driver="org.hsqldb.jdbcDriver" url="${db.url}" userid="sa" password="" autocommit="true">SHUTDOWN</sql>
+	</target>
+
+
+	<target name="build-tests" depends="build" description="Build the system">
+		<javac srcdir="${test.dir}" destdir="${build.test.dir}" debug="true" debuglevel="lines,vars,source" encoding="utf-8" compiler="modern" target="1.5" source="1.5" classpathref="libs">
+			<classpath>
+				<pathelement path="${build.classes.dir}" />
+			</classpath>
+		</javac>
+	</target>
+
+	<target name="test" depends="build-tests" description="Run the template application">
+
+		<junit>
+			<classpath refid="test-classpath" />
+
+			<formatter type="brief" usefile="false" />
+			<batchtest>
+				<fileset dir="${build.test.dir}" includes="**/*.class" />
+			</batchtest>
+		</junit>
+
+
+	</target>
+
+	<target name="init" description="Initialize">
+		<mkdir dir="${build.dir}" />
+		<mkdir dir="${build.classes.dir}" />
+		<mkdir dir="${build.test.dir}" />
 	</target>
 </project>
 
