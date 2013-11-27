@@ -6,6 +6,7 @@ import java.util.NoSuchElementException;
 
 import junit.framework.Assert;
 
+import org.apache.log4j.BasicConfigurator;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -20,9 +21,9 @@ public class StockTableModelTest {
 	private SalesDomainController dc;
 	@Before
 	public void setUp() {
-		dc=new SalesDomainControllerImpl();
+		dc = new SalesDomainControllerImpl();
 		ssm = new SalesSystemModel(dc);
-		model=ssm.getWarehouseTableModel();
+		model = ssm.getWarehouseTableModel();
 	}
 	
 	@Test
